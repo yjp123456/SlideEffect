@@ -50,8 +50,11 @@ public class PuzzleAnimImpl {
         final Point leftAnimEndPoint = new Point();
         final Point rightAnimStartPoint = new Point();
         final Point rightAnimEndPoint = new Point();
-        float k;
+        float k = 0;
+        boolean isVertical = false;
+        boolean isHorizontal = false;
         if (first.x == second.x) {
+            isVertical = true;
             first.y = Math.abs(first.y);
             second.y = Math.abs(second.y);
             if (first.y > second.y) {
@@ -74,6 +77,7 @@ public class PuzzleAnimImpl {
             }
 
         } else if (first.y == second.y) {
+            isHorizontal = true;
             first.y = Math.abs(first.y);
             second.y = Math.abs(second.y);
             if (first.x > second.x) {
@@ -214,16 +218,18 @@ public class PuzzleAnimImpl {
                 break;
             case MODE_TOP_TO_BOTTOM:
                 float minY = Math.min(first.y, second.y);
-                leftAnimStartPoint.y = (int) (minY * cutView.getHeight());
+                float maxY = Math.max(first.y, second.y);
+                leftAnimStartPoint.y = isHorizontal || isVertical || k > 0 ? 0 : (int) (minY * cutView.getHeight());
                 leftAnimStartPoint.x = 0;
-                leftAnimEndPoint.y = cutView.getHeight();
+                leftAnimEndPoint.y = (int) (maxY * cutView.getHeight());
                 leftAnimEndPoint.x = 0;
                 break;
             case MODE_BOTTOM_TO_TOP:
-                float maxY = Math.max(first.y, second.y);
+                minY = Math.min(first.y, second.y);
+                maxY = Math.max(first.y, second.y);
                 leftAnimStartPoint.y = (int) (maxY * cutView.getHeight());
                 leftAnimStartPoint.x = 0;
-                leftAnimEndPoint.y = 0;
+                leftAnimEndPoint.y = isHorizontal || isVertical || k > 0 ? 0 : (int) (minY * cutView.getHeight());
                 leftAnimEndPoint.x = 0;
                 break;
 
@@ -246,16 +252,18 @@ public class PuzzleAnimImpl {
                 break;
             case MODE_TOP_TO_BOTTOM:
                 float minY = Math.min(first.y, second.y);
+                float maxY = Math.max(first.y, second.y);
                 rightAnimStartPoint.y = (int) (minY * cutView.getHeight());
                 rightAnimStartPoint.x = 0;
-                rightAnimEndPoint.y = cutView.getHeight();
+                rightAnimEndPoint.y = isHorizontal || isVertical || k > 0 ? cutView.getHeight() : (int) (maxY * cutView.getHeight());
                 rightAnimEndPoint.x = 0;
                 break;
             case MODE_BOTTOM_TO_TOP:
-                float maxY = Math.max(first.y, second.y);
-                rightAnimStartPoint.y = (int) (maxY * cutView.getHeight());
+                minY = Math.min(first.y, second.y);
+                maxY = Math.max(first.y, second.y);
+                rightAnimStartPoint.y = isHorizontal || isVertical || k > 0 ? cutView.getHeight() : (int) (maxY * cutView.getHeight());
                 rightAnimStartPoint.x = 0;
-                rightAnimEndPoint.y = 0;
+                rightAnimEndPoint.y = (int) (minY * cutView.getHeight());
                 rightAnimEndPoint.x = 0;
                 break;
 
